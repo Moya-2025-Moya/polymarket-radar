@@ -1,0 +1,65 @@
+@import "tailwindcss";
+
+:root {
+  /* Deep blue-gray, not pure black. */
+  --bg: #0a0a0f;
+  --surface: #101016;
+  --elevated: #16161e;
+  --border: #20202b;
+  --hairline: #18181f;
+
+  --foreground: #ececef;
+  --muted: #8a8a99; /* labels, quiet */
+  --faint: #54546a; /* placeholders, faintest */
+
+  /* Amber signature accent (phosphor-terminal heritage). Used sparingly. */
+  --accent: #f2a33c;
+  --pos: #54c98a; /* gains */
+  --neg: #e2674f; /* losses */
+  --warn: #f2a33c;
+}
+
+@theme inline {
+  --color-bg: var(--bg);
+  --color-surface: var(--surface);
+  --color-elevated: var(--elevated);
+  --color-border: var(--border);
+  --color-hairline: var(--hairline);
+  --color-foreground: var(--foreground);
+  --color-muted: var(--muted);
+  --color-faint: var(--faint);
+  --color-accent: var(--accent);
+  --color-pos: var(--pos);
+  --color-neg: var(--neg);
+  --color-warn: var(--warn);
+
+  --font-display: var(--font-space-grotesk);
+  --font-sans: var(--font-inter);
+  --font-mono: var(--font-jetbrains-mono);
+}
+
+html {
+  background: var(--bg);
+}
+
+body {
+  background: var(--bg);
+  color: var(--foreground);
+  font-family: var(--font-sans), system-ui, sans-serif;
+  -webkit-font-smoothing: antialiased;
+}
+
+/* Tabular, slashed-zero numerals everywhere mono is used. */
+.font-mono {
+  font-variant-numeric: tabular-nums slashed-zero;
+}
+
+::selection {
+  background: color-mix(in srgb, var(--accent) 30%, transparent);
+}
+
+/* Quiet scrollbars. */
+* {
+  scrollbar-width: thin;
+  scrollbar-color: var(--border) transparent;
+}
