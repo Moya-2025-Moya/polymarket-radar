@@ -58,10 +58,10 @@ export interface Candidate {
 
 const CANDIDATE_CAP = 200; // hard cap on markets a scan will sweep
 
-// The full enriched market list, cached for an hour. The raw list is 2.4MB
+// The full enriched market list, cached for a day. The raw list is 2.4MB
 // (uncacheable by Next's data cache) and its volume ranking churns every minute,
 // which was busting every downstream cache and forcing a 2.4MB refetch on every
-// page. unstable_cache stores the small slimmed result, computed once per hour.
+// page. unstable_cache stores the small slimmed result, computed once per day.
 const allCandidates = unstable_cache(
   async (): Promise<Candidate[]> => {
     const page = await polymarket.samplingMarkets();
@@ -82,7 +82,7 @@ const allCandidates = unstable_cache(
       .sort((a, b) => b.volume - a.volume);
   },
   ["pm-all-candidates"],
-  { revalidate: 3600 },
+  { revalidate: 86400 },
 );
 
 // Markets above a user-set 24h-volume floor - the universe a scan sweeps. The
@@ -941,7 +941,7 @@ export async function motherClusters(cids: string[]): Promise<MotherCluster[]> {
 }
 
 // ── Cached, volume-floored scan entry points ────────────────────────────────
-// Wrap each scan so the heavy compute is truly cached for an hour, keyed by the
+// Wrap each scan so the heavy compute is truly cached for a day, keyed by the
 // volume floor (the route reads minVol from the query, which would otherwise make
 // the route dynamic and never-cached). Titles for the scanned markets ride along
 // so the client needs no separate lookup, and works for markets beyond the top 60.
@@ -959,7 +959,7 @@ export function scanInsiders(minVol: number) {
       return { markets, titles: titleMap(cands), generatedAt: Date.now() };
     },
     ["scan-insiders", String(minVol)],
-    { revalidate: 3600 },
+    { revalidate: 86400 },
   )();
 }
 
@@ -971,7 +971,7 @@ export function scanUnderdog(minVol: number, fresh: boolean) {
       return { signals, titles: titleMap(cands), generatedAt: Date.now() };
     },
     ["scan-underdog", String(minVol), fresh ? "1" : "0"],
-    { revalidate: 3600 },
+    { revalidate: 86400 },
   )();
 }
 
@@ -983,7 +983,7 @@ export function scanProven(minVol: number) {
       return { traders, generatedAt: Date.now() };
     },
     ["scan-proven", String(minVol)],
-    { revalidate: 3600 },
+    { revalidate: 86400 },
   )();
 }
 
@@ -995,6 +995,6 @@ export function scanMothers(minVol: number) {
       return { clusters, generatedAt: Date.now() };
     },
     ["scan-mothers", String(minVol)],
-    { revalidate: 3600 },
+    { revalidate: 86400 },
   )();
 }
