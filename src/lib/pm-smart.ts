@@ -291,10 +291,14 @@ async function walletProfitLight(
 
 // Full profile for the drill-down / wallet page: open book, unrealized PnL,
 // recent fills (the copy signal), and approximate record.
-export async function walletBook(wallet: string): Promise<WalletBook> {
+export async function walletBook(wallet: string, limit = 300): Promise<WalletBook> {
+  // limit caps the positions/activity pulled per wallet. The bulk scans pass a
+  // smaller value (lighter payloads, faster fan-out); the single-wallet drill-down
+  // uses the default. Holdings/record are derived from a window either way, so a
+  // tighter cap only trims the long tail — it stays a recent-form lower bound.
   const [positions, acts] = await Promise.all([
-    dataApiGet<PmRawPosition[]>(`/positions?user=${encodeURIComponent(wallet)}&limit=500`, 120),
-    dataApiGet<PmActivity[]>(`/activity?user=${encodeURIComponent(wallet)}&limit=500`, 120),
+    dataApiGet<PmRawPosition[]>(`/positions?user=${encodeURIComponent(wallet)}&limit=${limit}`, 120),
+    dataApiGet<PmActivity[]>(`/activity?user=${encodeURIComponent(wallet)}&limit=${limit}`, 120),
   ]);
   const profit = profitFromPositions(positions);
   const rec = recordFromActivity(acts, positions);
@@ -857,8 +861,10 @@ const MIN_ESTABLISHED = 30; // ≥ this many lifetime activity rows = an "old" w
 // full stat line the client filters on.
 export async function provenWallets(cids: string[]): Promise<ProvenWallet[]> {
   const cand = await gatherWallets(cids);
-  const list = [...cand.entries()].slice(0, 45);
-  const books = await pool(list.map(([w]) => () => walletBook(w)), RECORD_CONCURRENCY);
+  // 36 candidates → ~30 survive the activity floor below; fewer full wallet
+  // pulls = faster scan. A lighter per-wallet limit keeps payloads small.
+  const list = [...cand.entries()].slice(0, 36);
+  const books = await pool(list.map(([w]) => () => walletBook(w, 250)), RECORD_CONCURRENCY);
   return list
     .map(([wallet, info], i) => {
       const b = books[i];
@@ -900,7 +906,7 @@ export async function motherClusters(cids: string[]): Promise<MotherCluster[]> {
 
   const out: MotherCluster[] = [];
   for (const c of real) {
-    const books = await pool(c.wallets.map((w) => () => walletBook(w)), RECORD_CONCURRENCY);
+    const books = await pool(c.wallets.map((w) => () => walletBook(w, 250)), RECORD_CONCURRENCY);
     let totalValue = 0;
     let totalOpenPnl = 0;
     let totalBets = 0;

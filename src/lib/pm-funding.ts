@@ -108,9 +108,15 @@ export async function traceFunding(wallets: string[], maxWallets = MAX_WALLETS):
   if (!RPC) return { rpcConfigured: false, nodes: [], clusters: [], rpcCalls: 0 };
   const uniq = [...new Set(wallets.map((w) => w.toLowerCase()))].slice(0, maxWallets);
 
-  // One getAssetTransfers per wallet (cached 24h).
+  // One getAssetTransfers per wallet (cached 24h). Run in bounded-concurrency
+  // batches instead of strictly sequentially — much faster on a cold trace while
+  // staying under Alchemy's free-tier rate limit.
   const nodes: FunderNode[] = [];
-  for (const w of uniq) nodes.push(await firstFunder(w));
+  const FUND_CONCURRENCY = 5;
+  for (let i = 0; i < uniq.length; i += FUND_CONCURRENCY) {
+    const batch = uniq.slice(i, i + FUND_CONCURRENCY);
+    nodes.push(...(await Promise.all(batch.map((w) => firstFunder(w)))));
+  }
   let rpcCalls = uniq.length;
 
   // Group by funder; only funders linking ≥2 wallets matter.
