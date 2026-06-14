@@ -419,7 +419,7 @@ export async function traderLeaderboard(cids: string[]): Promise<LeaderboardEntr
     .slice(0, 30);
 }
 
-// ── Underdog scan ("母鸡" signal) ───────────────────────────────────────────
+// ── Underdog scan ("mother hen" signal) ─────────────────────────────────────
 // Hunts the insider footprint: big BUYS on a CHEAP outcome (the side the market
 // has written off), clustered across multiple low-history wallets. Insiders use
 // fresh throwaway wallets to stay hidden, so a short trading history is a FEATURE
@@ -783,7 +783,7 @@ export async function marketSmartMoney(cid: string): Promise<MarketSmartMoney> {
   };
 }
 
-// ── Wallet intelligence: proven wallets & 母鸡 clusters ──────────────────────
+// ── Wallet intelligence: proven wallets & mother-hen clusters ────────────────
 // Two archetypes the client toggles between. Both are heavy, so the routes cache
 // daily - opening the page reads a saved snapshot, no live recompute / RPC.
 export interface ProvenWallet {
@@ -803,7 +803,7 @@ export interface ProvenWallet {
 }
 
 export interface MotherCluster {
-  funder: string; // the 母鸡 (shared funding wallet)
+  funder: string; // the mother hen (shared funding wallet)
   funderTxCount: number;
   count: number; // linked wallets
   members: { wallet: string; name: string }[];
@@ -889,7 +889,7 @@ export async function provenWallets(cids: string[]): Promise<ProvenWallet[]> {
     .slice(0, 30);
 }
 
-// 母鸡 clusters: take the fresh wallets loading longshots, trace their Polygon
+// Mother-hen clusters: take the fresh wallets loading longshots, trace their Polygon
 // funding, and keep only groups that share a real (non-exchange) funder - the
 // hidden insider operating many throwaway wallets from one source. Aggregate the
 // whole cluster so a fresh wallet finally carries meaning.

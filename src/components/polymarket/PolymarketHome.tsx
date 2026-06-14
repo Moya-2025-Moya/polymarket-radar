@@ -271,7 +271,7 @@ function InsiderDigest({
   );
 }
 
-// ── longshot loading (母鸡) ──────────────────────────────────────────────────
+// ── longshot loading (mother hen) ────────────────────────────────────────────
 function LongshotDigest({
   minVol,
   titleOf,
@@ -299,7 +299,7 @@ function LongshotDigest({
 
   return (
     <Section
-      title="Longshot loading (母鸡)"
+      title="Longshot loading (mother hen)"
       hint="New wallets betting big on cheap outcomes."
       href="/polymarket/underdog"
     >

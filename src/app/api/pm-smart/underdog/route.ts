@@ -1,4 +1,4 @@
-// Underdog ("母鸡") scan: GET /api/pm-smart/underdog?minVol=<$k>&fresh=1
+// Underdog ("mother hen") scan: GET /api/pm-smart/underdog?minVol=<$k>&fresh=1
 // Sweeps every market above the volume floor for big buys on cheap outcomes,
 // clustered across low-history wallets. Cached 1h (keyed by floor + fresh).
 import { NextResponse } from "next/server";

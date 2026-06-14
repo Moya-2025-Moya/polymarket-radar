@@ -7,8 +7,8 @@ import { useSyncExternalStore } from "react";
 // locally, adjustable live - changing it re-filters without refetching.
 
 export interface SharpConfig {
-  minBets: number; // 押注次数 - minimum resolved bets sampled
-  minWinRate: number; // 胜率 - minimum win rate, 0..1
+  minBets: number; // minimum resolved bets sampled
+  minWinRate: number; // minimum win rate, 0..1
 }
 
 const KEY = "pm_sharp_config";

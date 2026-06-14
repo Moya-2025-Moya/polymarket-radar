@@ -59,14 +59,14 @@ export function TradersBoard() {
               onClick={() => setMode("mother")}
               className={`rounded-md px-3 py-1.5 ${mode === "mother" ? "bg-elevated text-accent" : "text-muted hover:text-foreground"}`}
             >
-              母鸡 clusters
+              Mother hen
             </button>
           </div>
           <Hint
             text={
               mode === "proven"
                 ? "Established wallets (long track record) ranked by how much they're up right now. Tune the win-rate and bet-count bar to find the ones with a real edge."
-                : "Brand-new wallets loading longshots that share one on-chain funder (the 母鸡). The whole cluster is one hidden operator, so its combined record is what matters."
+                : "Brand-new wallets loading longshots that share one on-chain funder (the mother hen). The whole cluster is one hidden operator, so its combined record is what matters."
             }
           />
         </div>
@@ -224,7 +224,7 @@ function ProvenView() {
   );
 }
 
-// ── 母鸡 clusters ────────────────────────────────────────────────────────────
+// ── Mother-hen clusters ──────────────────────────────────────────────────────
 function MotherView() {
   const f = useWalletFilters();
   const [rows, setRows] = useState<MotherCluster[] | null>(null);
@@ -263,7 +263,7 @@ function MotherView() {
       {state === "error" && <div className="text-sm text-neg">Couldn&apos;t load clusters.</div>}
       {state === "ok" && shown.length === 0 && (
         <div className="rounded-xl border border-hairline bg-surface px-5 py-8 text-center text-sm leading-relaxed text-muted">
-          No 母鸡 detected - no group of fresh longshot wallets currently shares an on-chain funder.
+          No mother hen detected - no group of fresh longshot wallets currently shares an on-chain funder.
         </div>
       )}
       {state === "ok" && shown.length > 0 && (
@@ -273,7 +273,7 @@ function MotherView() {
               <div className="flex items-start justify-between gap-3">
                 <span className="min-w-0">
                   <span className="flex items-center gap-2">
-                    <span className="rounded bg-accent/15 px-1.5 py-0.5 text-[10px] font-semibold uppercase tracking-wide text-accent">母鸡</span>
+                    <span className="rounded bg-accent/15 px-1.5 py-0.5 text-[10px] font-semibold uppercase tracking-wide text-accent">MOTHER HEN</span>
                     <a
                       href={`https://polygonscan.com/address/${c.funder}`}
                       target="_blank"

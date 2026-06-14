@@ -1,4 +1,4 @@
-// Layer 2 of the "母鸡" hunt: trace where fresh wallets got their money on
+// Layer 2 of the "mother hen" hunt: trace where fresh wallets got their money on
 // Polygon and cluster any that share a funder. RPC-frugal by design - funding
 // history is immutable, so everything is cached 24h and repeat traces cost zero.
 //
@@ -31,7 +31,7 @@ export interface FunderNode {
 export interface FundingCluster {
   funder: string;
   wallets: string[];
-  isExchange: boolean; // shared funder is an exchange/bridge → not a real 母鸡
+  isExchange: boolean; // shared funder is an exchange/bridge, not a real mother hen
   funderTxCount: number;
 }
 

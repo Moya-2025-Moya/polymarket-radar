@@ -245,7 +245,7 @@ function FundingTraceBlock({ wallets, names }: { wallets: string[]; names: Recor
         className="mt-3 rounded border border-border px-2.5 py-1 text-[11px] text-faint hover:text-foreground"
         title="Look up who funded these wallets on Polygon and cluster any that share a source. Cached, minimal RPC."
       >
-        Trace funding (母鸡) →
+        Trace funding (mother hen) →
       </button>
     );
   }
@@ -264,7 +264,7 @@ function FundingTraceBlock({ wallets, names }: { wallets: string[]; names: Recor
               .filter((c) => !c.isExchange)
               .map((c) => (
                 <div key={c.funder} className="rounded border border-accent/40 bg-accent/[0.06] px-2.5 py-2 text-[11px]">
-                  <span className="text-accent">母鸡 found:</span>{" "}
+                  <span className="text-accent">Mother hen found:</span>{" "}
                   <span className="font-mono text-foreground">{c.wallets.length} wallets</span> share funder{" "}
                   <a
                     href={`https://polygonscan.com/address/${c.funder}`}

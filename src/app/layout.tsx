@@ -15,7 +15,7 @@ const mono = JetBrains_Mono({
 
 export const metadata: Metadata = {
   title: "moya.terminal",
-  description: "统一策略操作台 - DeFi, bots, discretionary in one place",
+  description: "Unified strategy console - DeFi, bots, discretionary in one place",
 };
 
 export default function RootLayout({

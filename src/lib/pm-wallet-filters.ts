@@ -7,7 +7,7 @@ import { useSyncExternalStore } from "react";
 export interface WalletFilters {
   provenMinBets: number; // proven: min resolved bets (sample size)
   provenMinWin: number; // proven: min win rate 0..1
-  motherMinWallets: number; // 母鸡: min linked wallets in a cluster
+  motherMinWallets: number; // min linked wallets in a cluster
   scanMinVolume: number; // skip markets below this 24h volume (in $k) when scanning
 }
 
