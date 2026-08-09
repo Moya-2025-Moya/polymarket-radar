@@ -1,13 +1,15 @@
 import { PageHeader, Pending } from "@/components/ui/PageHeader";
 import { MarketBrowser } from "@/components/polymarket/MarketBrowser";
 import type { MarketWithVol } from "@/components/polymarket/MarketSelector";
+import { unstable_cache } from "next/cache";
 import { polymarket } from "@/lib/polymarket";
 
-export default async function PolymarketPage() {
-  let markets: MarketWithVol[] = [];
-  let error: string | null = null;
-
-  try {
+// /sampling-markets weighs ~3.3MB, over Next's 2MB data-cache ceiling, so the
+// raw response can never be cached — every regeneration refetched and reparsed
+// all of it just to keep the slimmed rows below. Cache the PROJECTION instead,
+// the same trick lib/pm-smart.ts already uses for its candidate list.
+const topMarkets = unstable_cache(
+  async (): Promise<MarketWithVol[]> => {
     const page = await polymarket.samplingMarkets();
     const tradeable = page.data.filter(
       (m) => m.active && !m.closed && m.accepting_orders,
@@ -17,7 +19,7 @@ export default async function PolymarketPage() {
     const signals = await polymarket.marketSignals(
       tradeable.map((m) => m.condition_id),
     );
-    markets = tradeable
+    return tradeable
       // Slim each market to ONLY the fields the client uses. Spreading `...m`
       // dragged the full raw clob object into the page HTML (description 405KB,
       // rewards/image/icon ~180KB, etc. - none of it rendered). description is
@@ -45,6 +47,17 @@ export default async function PolymarketPage() {
       .sort((a, b) => b.volume - a.volume)
       // Top 500 by volume - covers all liquid markets; the dust tail isn't traded.
       .slice(0, 500);
+  },
+  ["pm-top-markets"],
+  { revalidate: 60 },
+);
+
+export default async function PolymarketPage() {
+  let markets: MarketWithVol[] = [];
+  let error: string | null = null;
+
+  try {
+    markets = await topMarkets();
   } catch (e) {
     error = e instanceof Error ? e.message : String(e);
   }
